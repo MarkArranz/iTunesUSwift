@@ -16,36 +16,18 @@ class CalculatorBrain {
     func setOperand(operand: Double) {
         accumulator = operand
         internalProgram.append(operand)
-        description.appendContentsOf(String(format: "%g", operand))
     }
     
-    private var description = ""
     private var isPartialResult = false
     
-    var getDescription: String {
-        get {
-            var endString = " "
-            if isPartialResult {
-                endString.appendContentsOf("...")
-            } else if description.characters.count > 1 {
-                endString.appendContentsOf("=")
-            }
-            return description + endString
-        }
-    }
-    
-    func clearDescription() {
-        description = ""
-    }
-
     private var operations: Dictionary<String,Operation> = [
         "π" : Operation.Constant(M_PI),
         "e" : Operation.Constant(M_E),
-        "√" : Operation.PrefixUnaryOperation(sqrt),
-        "x^2" : Operation.PostfixUnaryOperation({ $0 * $0 }),
-        "sin" : Operation.PrefixUnaryOperation(sin),
-        "cos" : Operation.PrefixUnaryOperation(cos),
-        "tan" : Operation.PrefixUnaryOperation(tan),
+        "√" : Operation.UnaryOperation(sqrt),
+        "x^2" : Operation.UnaryOperation({ $0 * $0 }),
+        "sin" : Operation.UnaryOperation(sin),
+        "cos" : Operation.UnaryOperation(cos),
+        "tan" : Operation.UnaryOperation(tan),
         "x^y" : Operation.BinaryOperation(pow),
         "×" : Operation.BinaryOperation({ $0 * $1 }),
         "÷" : Operation.BinaryOperation({ $0 / $1 }),
@@ -57,8 +39,7 @@ class CalculatorBrain {
     
     private enum Operation {
         case Constant(Double)
-        case PrefixUnaryOperation((Double) -> Double)
-        case PostfixUnaryOperation((Double) -> Double)
+        case UnaryOperation((Double) -> Double)
         case BinaryOperation((Double, Double) -> Double)
         case Equals
         case Clear
@@ -70,24 +51,11 @@ class CalculatorBrain {
             switch operation {
             case .Constant(let value):
                 accumulator = value
-                description.appendContentsOf(" " + symbol + " ")
-            case .PrefixUnaryOperation(let function):
+            case .UnaryOperation(let function):
                 accumulator = function(accumulator)
-            case .PostfixUnaryOperation(let function):
-                accumulator = function(accumulator)
-                if symbol == "x^2" {
-                    description.appendContentsOf("^2 ")
-                } else {
-                    description.appendContentsOf(" \(symbol) ")
-                }
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
                 pending = pendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator)
-                if symbol == "x^y" {
-                    description.appendContentsOf("^")
-                } else {
-                    description.appendContentsOf(" \(symbol) ")
-                }
                 isPartialResult = true
             case .Equals:
                 executePendingBinaryOperation()
@@ -137,8 +105,6 @@ class CalculatorBrain {
         accumulator = 0.0
         pending = nil
         internalProgram.removeAll()
-        description = ""
-        isPartialResult = false
     }
     
     var result: Double {

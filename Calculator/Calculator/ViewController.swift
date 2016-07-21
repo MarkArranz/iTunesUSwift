@@ -11,7 +11,6 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel! // <- implicitly unwrapped optional
-    @IBOutlet private weak var programDescription: UILabel!
     
     private var userIsInTheMiddleOfTyping = false
     
@@ -48,6 +47,5 @@ class ViewController: UIViewController {
             brain.performOperation(mathematicalSymbol)
         }
         displayValue = brain.result
-        programDescription.text = brain.getDescription
     }
 }
