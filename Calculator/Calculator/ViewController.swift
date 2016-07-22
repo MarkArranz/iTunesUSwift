@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet private weak var display: UILabel! // <- implicitly unwrapped optional
+    @IBOutlet private weak var descriptionDisplay: UILabel!
     
     private var userIsInTheMiddleOfTyping = false
     
@@ -33,6 +34,8 @@ class ViewController: UIViewController {
         }
         set {
             display.text = String(format: "%g", newValue)
+            descriptionDisplay.text = brain.description +
+                (brain.description == " " ? "" : (brain.isPartialResult ? " ..." : " ="))
         }
     }
     
