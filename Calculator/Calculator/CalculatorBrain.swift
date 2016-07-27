@@ -37,6 +37,22 @@ class CalculatorBrain {
         internalProgram.append(operand)
     }
     
+    func setOperand(variableName: String) {
+        descriptionAccumulator = variableName
+        internalProgram.append(variableName)
+        if let existingValue = variableValues[variableName] {
+            accumulator = existingValue
+        } else {
+            variableValues[variableName] = 0.0
+        }
+    }
+    
+    var variableValues: Dictionary<String, Double> = [:] {
+        didSet {
+            program = internalProgram
+        }
+    }
+    
     private var operations: Dictionary<String,Operation> = [
         "π" : Operation.Constant(M_PI),
         "e" : Operation.Constant(M_E),
@@ -79,6 +95,7 @@ class CalculatorBrain {
                 executePendingBinaryOperation()
             case .Clear:
                 clear()
+                variableValues.removeAll()
             }
         }
     }
@@ -113,8 +130,12 @@ class CalculatorBrain {
                 for op in arrayOfOps {
                     if let operand = op as? Double {
                         setOperand(operand)
-                    } else if let operation = op as? String {
-                        performOperation(operation)
+                    } else if let keyOrOperation = op as? String {
+                        if variableValues.keys.contains(keyOrOperation) {
+                            setOperand(keyOrOperation)
+                        } else {
+                            performOperation(keyOrOperation)
+                        }
                     }
                 }
             }

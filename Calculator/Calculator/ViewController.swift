@@ -52,4 +52,13 @@ class ViewController: UIViewController {
         }
         displayValue = brain.result
     }
+    
+    @IBAction func setVariable(sender: UIButton) {
+        brain.variableValues["M"] = displayValue
+    }
+    
+    @IBAction func createVariable(sender: UIButton) {
+        brain.setOperand(sender.currentTitle!)
+        displayValue = brain.result
+    }
 }
