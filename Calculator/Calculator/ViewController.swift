@@ -34,8 +34,9 @@ class ViewController: UIViewController {
         }
         set {
             display.text = String(format: "%g", newValue)
-            descriptionDisplay.text = brain.description +
-                (brain.description == " " ? "" : (brain.isPartialResult ? " ..." : " ="))
+            descriptionDisplay.text = brain.description.isEmpty
+                ? " "
+                : brain.description + (brain.isPartialResult ? " ..." : " =")
         }
     }
     

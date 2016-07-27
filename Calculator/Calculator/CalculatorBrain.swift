@@ -11,7 +11,7 @@ import Foundation
 class CalculatorBrain {
     
     private var accumulator = 0.0
-    private var descriptionAccumulator = " "
+    private var descriptionAccumulator = ""
     private var internalProgram = [AnyObject]()
     
     var description: String {
@@ -20,7 +20,7 @@ class CalculatorBrain {
                 return descriptionAccumulator
             } else {
                 return pending!.descriptionFunction(pending!.descriptionOperand,
-                                                    pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : " ")
+                                                    pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
             }
         }
     }
@@ -123,7 +123,7 @@ class CalculatorBrain {
     
     func clear() {
         accumulator = 0.0
-        descriptionAccumulator = " "
+        descriptionAccumulator = ""
         pending = nil
         internalProgram.removeAll()
     }
