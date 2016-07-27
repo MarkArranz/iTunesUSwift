@@ -65,21 +65,19 @@ class ViewController: UIViewController {
     }
     
     @IBAction func touchUndo(sender: UIButton) {
+        var newDisplayValue = ""
+        
         if userIsInTheMiddleOfTyping {
             let digit = display.text!
-            let newDigit = digit.substringToIndex(digit.endIndex.predecessor())
-            
-            if newDigit == "0" || newDigit.isEmpty {
-                userIsInTheMiddleOfTyping = false
-                brain.undo()
-                displayValue = brain.result
-            } else {
-                display.text = newDigit
-            }
-            
+            newDisplayValue = digit.substringToIndex(digit.endIndex.predecessor())
+            newDisplayValue = newDisplayValue.isEmpty ? "0" : newDisplayValue
         } else {
-            brain.undo()
+            newDisplayValue = brain.undo()
+            // Set displayValue to get correct description
             displayValue = brain.result
         }
+        
+        userIsInTheMiddleOfTyping = newDisplayValue == "0" ? false : true
+        display.text = newDisplayValue
     }
 }

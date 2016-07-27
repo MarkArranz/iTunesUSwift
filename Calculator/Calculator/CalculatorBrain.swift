@@ -58,9 +58,34 @@ class CalculatorBrain {
         }
     }
     
-    func undo() {
-        internalProgram.popLast()
+    func undo() -> String {
+        let operand: Double
+        var count = 0
+        var lastInput: AnyObject?
+        var operation: String?
+        
+        repeat {
+            count += 1
+            lastInput = internalProgram.popLast()
+            operation = lastInput as? String
+        } while (operation != nil && operations.keys.contains(operation!))
+        
+        if operation != nil {
+            operand = variableValues[operation!] ?? 0.0
+            if count > 1 {
+                /*  
+                 Re-append the variable if it wasn't the last input
+                 when undo() was first called. This ensures the
+                 description display on the calculator is correct.
+                */
+                internalProgram.append(lastInput!)
+            }
+        } else {
+            operand = lastInput as? Double ?? 0.0
+        }
+        
         program = internalProgram
+        return String(format: "%g", operand)
     }
     
     private var operations: Dictionary<String,Operation> = [
