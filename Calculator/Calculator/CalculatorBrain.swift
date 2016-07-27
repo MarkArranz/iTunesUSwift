@@ -134,7 +134,7 @@ class CalculatorBrain {
                 executePendingBinaryOperation()
             case .Clear:
                 clear()
-                variableValues.removeAll()
+                clearVariables()
             }
         }
     }
@@ -189,6 +189,10 @@ class CalculatorBrain {
         descriptionAccumulator = ""
         pending = nil
         internalProgram.removeAll()
+    }
+    
+    func clearVariables() {
+        variableValues.removeAll()
     }
     
     var result: Double {
