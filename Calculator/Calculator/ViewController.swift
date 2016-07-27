@@ -63,4 +63,23 @@ class ViewController: UIViewController {
         brain.setOperand(sender.currentTitle!)
         displayValue = brain.result
     }
+    
+    @IBAction func touchUndo(sender: UIButton) {
+        if userIsInTheMiddleOfTyping {
+            let digit = display.text!
+            let newDigit = digit.substringToIndex(digit.endIndex.predecessor())
+            
+            if newDigit == "0" || newDigit.isEmpty {
+                userIsInTheMiddleOfTyping = false
+                brain.undo()
+                displayValue = brain.result
+            } else {
+                display.text = newDigit
+            }
+            
+        } else {
+            brain.undo()
+            displayValue = brain.result
+        }
+    }
 }

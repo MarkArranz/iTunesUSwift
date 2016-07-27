@@ -19,8 +19,13 @@ class CalculatorBrain {
             if !isPartialResult {
                 return descriptionAccumulator
             } else {
-                return pending!.descriptionFunction(pending!.descriptionOperand,
-                                                    pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+                return pending!
+                    .descriptionFunction(
+                        pending!.descriptionOperand,
+                        pending!.descriptionOperand != descriptionAccumulator
+                            ? descriptionAccumulator
+                            : ""
+                )
             }
         }
     }
@@ -51,6 +56,11 @@ class CalculatorBrain {
         didSet {
             program = internalProgram
         }
+    }
+    
+    func undo() {
+        internalProgram.popLast()
+        program = internalProgram
     }
     
     private var operations: Dictionary<String,Operation> = [
@@ -89,8 +99,12 @@ class CalculatorBrain {
                 descriptionAccumulator = descriptionFunction(descriptionAccumulator)
             case .BinaryOperation(let function, let descriptionFunction):
                 executePendingBinaryOperation()
-                pending = pendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator,
-                                                     descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator)
+                pending = pendingBinaryOperationInfo(
+                    binaryFunction: function,
+                    firstOperand: accumulator,
+                    descriptionFunction: descriptionFunction,
+                    descriptionOperand: descriptionAccumulator
+                )
             case .Equals:
                 executePendingBinaryOperation()
             case .Clear:
@@ -103,7 +117,10 @@ class CalculatorBrain {
     private func executePendingBinaryOperation() {
         if pending != nil {
             accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator)
-            descriptionAccumulator = pending!.descriptionFunction(pending!.descriptionOperand, descriptionAccumulator)
+            descriptionAccumulator = pending!.descriptionFunction(
+                pending!.descriptionOperand,
+                descriptionAccumulator
+            )
             pending = nil
         }
     }
